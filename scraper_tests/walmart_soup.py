@@ -122,18 +122,17 @@ def get_walmart_reviews(headers_list, product_page_url, project, product, start_
             rating = len(review.find_elements_by_class_name('star-rated'))
 
             try:
-                if len(username_originpost_list) > 2:
-                    is_from_brand = username_originpost_list[2].text
-                else:
-                    is_from_brand = username_originpost_list[1].text
-
-                if is_from_brand != 'Read more':
-                    is_from_brand = is_from_brand.lower() + '.com'
-                else:
-                    is_from_brand = None
+                is_from_brand_element = review.find_element_by_class_name('review-footer')
             except:
+                print('No is from brand element exists')
+                is_from_brand_element = None
+
+            if is_from_brand_element:
+                is_from_brand = is_from_brand_element.find_element_by_class_name('font-semibold').text
+                print('This is from brand', is_from_brand)
+            else:
+                print('no is from brand?')
                 is_from_brand = None
-                logger.warn('No original post')
 
             if sorted_by_most_recent and review_date < cutoff_date:
                 within_cutoff_date = False
