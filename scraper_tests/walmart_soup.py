@@ -122,10 +122,13 @@ def get_walmart_reviews(headers_list, product_page_url, project, product, start_
             rating = len(review.find_elements_by_class_name('star-rated'))
 
             try:
-                is_from_brand = username_originpost_list[1].text
+                if len(username_originpost_list) > 2:
+                    is_from_brand = username_originpost_list[2].text
+                else:
+                    is_from_brand = username_originpost_list[1].text
 
                 if is_from_brand != 'Read more':
-                    is_from_brand = is_from_brand + '.com'
+                    is_from_brand = is_from_brand.lower() + '.com'
                 else:
                     is_from_brand = None
             except:
