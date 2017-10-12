@@ -103,8 +103,8 @@ def run_review_scraping(source_list, cutoff_date_text=None, start_date_text=None
             #     continue
             #end testing
 
-            if ppu.id <= 2478:
-                continue
+            # if ppu.id <= 2478:
+            #     continue
 
             brand = ppu.brand
             brand_website_name = ppu.brand
@@ -281,7 +281,7 @@ def create_review_file(project, source_list, path):
 
     wb.save(path + filename)
 
-project = Project.objects.filter(id=1)[0]
-print(project)
+# project = Project.objects.filter(id=1)[0]
+# print(project)
 
-create_review_file(project, ['Amazon', 'Walmart', 'Target', 'Walgreens', 'MakeupAlley', 'Ulta'], '')
+# create_review_file(project, ['Amazon', 'Walmart', 'Target', 'Walgreens', 'MakeupAlley', 'Ulta'], '')
