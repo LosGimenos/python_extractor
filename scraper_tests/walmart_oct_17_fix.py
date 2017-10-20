@@ -1,5 +1,3 @@
-from bs4 import BeautifulSoup
-
 import os
 import re
 import requests
@@ -60,18 +58,27 @@ def get_walmart_reviews(headers_list, product_page_url, project, product, start_
     sorted_by_most_recent = False
 
     try:
-        actions = ActionChains(driver)
-        selector = driver.find_element_by_xpath("//div[@class=' chooser ']")
-        actions.move_to_element(selector).perform()
-        selector.click()
+        selector = driver.find_element_by_class_name("ReviewsPagination-container")
+        selector_location = selector.location_once_scrolled_into_view
+        print(selector, selector_location)
+        y_coord = selector_location['y'] / 2
+        print(y_coord)
+        time.sleep(5)
+        driver.execute_script("window.scrollTo(0," + str(y_coord) + ");")
+        time.sleep(5)
+        selector_div = driver.find_element_by_xpath("//div[@class=' chooser ']")
+        selector_div.click()
+        logger.warn('Selector div clicked')
     except:
-        logger.warn('Couldnt get selector')
+        logger.warn('Couldnt get or click selector')
 
     try:
         select = Select(driver.find_element_by_xpath("//select[@class='visuallyhidden']"))
+        print(select)
         select.select_by_value('submission-desc')
         driver.find_element_by_xpath("//div[text()='Newest to oldest']").click()
         sorted_by_most_recent = True
+        logger.warn('Selector selected!')
     except:
         logger.warn("Couldn't select dropdown filter")
 

@@ -157,6 +157,7 @@ def convert_date_to_datetime(day_regex, month_regex, year_regex, date_to_convert
 
 def check_date_against_cutoff_date(review, cutoff_date, start_date):
     if review.date < cutoff_date or review.date > start_date:
+        print('deleted review', review)
         review.delete()
 
 def convert_date_a_to_one(regex_date, date_text):

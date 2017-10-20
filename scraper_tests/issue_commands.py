@@ -5,7 +5,7 @@ from selenium import webdriver
 import logging
 from .amazon import get_amazon_reviews
 # from .walmart import get_walmart_reviews
-from .walmart_soup import get_walmart_reviews
+from .walmart_oct_17_fix import get_walmart_reviews
 from .target import get_target_reviews_js
 from .walgreens import get_walgreens_reviews_js
 from .ulta import get_ulta_reviews_js
@@ -103,8 +103,12 @@ def run_review_scraping(source_list, cutoff_date_text=None, start_date_text=None
             #     continue
             #end testing
 
-            # if ppu.id <= 2478:
+            # fixing walgreens
+            # if ppu.id == 2432:
             #     continue
+
+            # if ppu.id > 2440:
+            #     return
 
             brand = ppu.brand
             brand_website_name = ppu.brand
@@ -173,16 +177,22 @@ def get_reviews(project,product,product_page_url,source_data_path,source,start_d
     if source == 'Target':
         # get_target_reviews_js(headers_list,product_page_url,project,product,start_date,cutoff_date,brand_website_name)
         get_target_reviews_api(headers_list,product_page_url,project,product,start_date,cutoff_date,brand_website_name)
+        # calculate_review_stats(project, product)
     elif source == 'Walgreens':
-        get_walgreens_reviews_js(product_page_url,project,product,start_date,cutoff_date,brand_website_name)
+        get_walgreens_reviews_js(headers_list,product_page_url,project,product,start_date,cutoff_date,brand_website_name)
+        # calculate_review_stats(project, product)
     elif source == 'Ulta':
         get_ulta_reviews_js(product_page_url,project,product,start_date,cutoff_date,brand_website_name)
+        # calculate_review_stats(project, product)
     elif source == 'MakeupAlley':
         get_makeup_alley_reviews_js(product_page_url,project,product,start_date,cutoff_date,brand_website_name,driver)
+        # calculate_review_stats(project, product)
     elif source == 'Amazon':
         get_amazon_reviews(headers_list,product_page_url,project,product,start_date,cutoff_date,brand_website_name)
+        # calculate_review_stats(project, product)
     elif source == 'Walmart':
         get_walmart_reviews(headers_list,product_page_url,project,product,start_date,cutoff_date,brand_website_name)
+        # calculate_review_stats(project, product)
 
 def create_review_file(project, source_list, path):
 

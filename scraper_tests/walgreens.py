@@ -15,7 +15,7 @@ from .helpers import *
 
 logger = logging.getLogger(__name__)
 
-def get_walgreens_reviews_js(product_page_url, project, product, start_date, cutoff_date, brand_website_name):
+def get_walgreens_reviews_js(headers_list,product_page_url, project, product, start_date, cutoff_date, brand_website_name):
 
     if not isinstance(product_page_url, str):
         return
@@ -110,10 +110,36 @@ def get_walgreens_reviews_js(product_page_url, project, product, start_date, cut
     try:
         select = Select(driver.find_element_by_id('bv-dropdown-select-1'))
         select.select_by_value('mostRecent')
+        logger.warn('selected most recent')
     except:
         logger.warn("Couldn't select dropdown filter")
 
     # expand list
+
+    visible_more_reviews_button = True
+    y_coord_offset = 0
+
+    while visible_more_reviews_button:
+
+        time.sleep(random.randint(3, 6))
+
+        try:
+            more_reviews_button = driver.find_element_by_class_name('bv-content-btn-pages-load-more')
+            print(more_reviews_button)
+
+            more_reviews_button_location = more_reviews_button.location_once_scrolled_into_view
+            print(more_reviews_button_location)
+            y_coord = more_reviews_button_location['y'] + (y_coord_offset - 200)
+            y_coord_offset = y_coord
+            print(y_coord)
+
+            driver.execute_script("window.scrollTo(0," + str(y_coord) + ");")
+
+            more_reviews_button = click_element(driver, xpaths["shown_load_more_reviews_button"])
+            logger.warn('Clicked load more')
+        except:
+            logger.warn('No load more reviews button')
+            visible_more_reviews_button = False
 
     while True:
 

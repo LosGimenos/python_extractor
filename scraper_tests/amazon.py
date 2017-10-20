@@ -35,6 +35,7 @@ def get_amazon_reviews(headers_list, product_page_url, project, product, start_d
 
     try:
         page_source = requests.get(product_page_url, headers=headers).text
+        logger.warn('Got primary page source')
     except:
         logger.warn('No valid URL')
         return
@@ -108,14 +109,17 @@ def get_amazon_reviews(headers_list, product_page_url, project, product, start_d
         review_page_url = product_page_url + "&pageNumber=" + str(page_number)
 
         if ((page_number % 400) == 0):
+            logger.warn('Large page volume. In wait...')
             time.sleep(random.randint(300,360))
+            logger.warn('...wait over')
+
         time.sleep(random.randint(20,30))
 
         # header_index = random.randint(0,0)
         # headers = headers_list[header_index]
 
         page_source = requests.get(review_page_url, headers=random.choice(headers_list)).text
-
+        print('Getting elements in page number ', page_number, 'out of ', number_of_pages)
         # urls
 
         matches = re.findall(regex['url'], page_source)
@@ -198,6 +202,7 @@ def get_amazon_reviews(headers_list, product_page_url, project, product, start_d
 
                 if review_date < cutoff_date:
                     calculate_review_stats(project, product)
+                    logger.warn('less than cutoff')
                     return
 
                 review = Review(project=project,product=product,url=review_url,date=review_date,title=title_matches[index],
